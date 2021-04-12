@@ -1,22 +1,18 @@
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ColourPalette extends JFrame{
 
-	
-	
-	
 	public ColourPalette(ArrayList <Color> colors)
 	{
 		super("Color Palette Selection");
 		setSize(600, 100);
+		
+		
 		
 		setLayout(new GridLayout(1, colors.size()));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -46,7 +42,6 @@ public class ColourPalette extends JFrame{
 		c.add(Color.WHITE);
 		c.add(Color.pink);
 		
-		ColourPalette cp = new ColourPalette(c);
+		new ColourPalette(c);
 	}
-
 }
