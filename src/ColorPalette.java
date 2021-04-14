@@ -1,27 +1,39 @@
-	import java.awt.Color;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+
 
 @SuppressWarnings("serial")
 public class ColorPalette extends JFrame{
 
-	public ColorPalette(ArrayList <Color> colors)
+	private JFrame displayFrame;
+	private JPanel displayPanel;
+	
+	private static int xSkew = 25;
+	private static int ySkew = 25;
+	
+	public ColorPalette(ArrayList <Color> colors, String name)
 	{
-		super("Color Palette Selection");
-		setSize(colors.size() * 100, 100);
+		super(name);
+		setSize(colors.size() * 100, 200);
+		displayFrame = null;
 		
 		
-		
-		setLayout(new GridLayout(1, colors.size()));
+		setLayout(new GridLayout(2, colors.size()));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocation(20, 200);
+		setLocation(xSkew, ySkew);
+		xSkew += 650;
+		
+		ArrayList <JButton> buttons = new ArrayList<JButton>();
 		
 		for(Color i : colors)
 		{
@@ -31,11 +43,14 @@ public class ColorPalette extends JFrame{
 			JButton button = new JButton();
 			
 			panel.setBackground(i);
-			panel.add(button);
-			
 			addColorListeners(i, button);
-			
+			buttons.add(button);
 			add(panel);
+		}
+		
+		for(JButton i : buttons)
+		{
+			add(i);
 		}
 		
 		setVisible(true);
@@ -51,28 +66,61 @@ public class ColorPalette extends JFrame{
 	
 	private void colorResponse(Color color)
 	{
-		JFrame frame = new JFrame("Color selected");
-		JPanel panel = new JPanel();
+		if(displayFrame == null || !displayFrame.isVisible())
+		{
+			displayFrame = new JFrame("Color selected");
+			displayPanel = new JPanel();
+			
+			setSkews();
+			
+			displayFrame.setLocation(xSkew, ySkew+200);
+			
+			
+			displayFrame.setSize(300,300);
+			displayFrame.add(displayPanel);
+			
+			displayFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			displayPanel.setBackground(color);
+			displayFrame.setVisible(true);
+		}
+		else
+		{
+			displayPanel.setBackground(color);
+			displayPanel.repaint();
+			displayFrame.repaint();
+		}
+	}
+	
+	
+	
+	private static void setSkews()
+	{
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		
-		panel.setBackground(color);
-		frame.add(panel);
-		
-		frame.setSize(100, 100);
-		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		frame.setVisible(true);
+		if(xSkew > screenSize.getWidth()) xSkew = 100;
+		else xSkew += 570;
+		if(ySkew > screenSize.getHeight()) ySkew = 100;
 	}
 
 	public static void main(String[] args) 
 	{
-		ArrayList <Color> c = new ArrayList<Color>();
+		ArrayList <Color> c1 = new ArrayList<Color>();
 		
-		c.add(Color.black);
-		c.add(Color.blue);
-		c.add(Color.DARK_GRAY);
-		c.add(Color.GREEN);
-		c.add(Color.WHITE);
-		c.add(Color.pink);
+		c1.add(Color.black);
+		c1.add(Color.blue);
+		c1.add(Color.DARK_GRAY);
+		c1.add(Color.GREEN);
+		c1.add(Color.WHITE);
+		c1.add(Color.pink);
 		
-		new ColorPalette(c);
+		new ColorPalette(c1, "Exterior Color Options");
+		
+		ArrayList <Color> c2 = new ArrayList <Color>();
+		
+		c2.add(Color.yellow);
+		c2.add(Color.magenta);
+		c2.add(Color.CYAN);
+		
+		new ColorPalette(c2, "Interior Color Options");
 	}
 }
