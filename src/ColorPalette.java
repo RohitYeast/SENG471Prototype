@@ -1,14 +1,13 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
@@ -21,7 +20,7 @@ public class ColorPalette extends JFrame{
 	private static int xSkew = 25;
 	private static int ySkew = 25;
 	
-	public ColorPalette(ArrayList <Color> colors, String name)
+	public ColorPalette(ArrayList <CarColor> colors, String name)
 	{
 		super(name);
 		setSize(colors.size() * 100, 200);
@@ -35,14 +34,13 @@ public class ColorPalette extends JFrame{
 		
 		ArrayList <JButton> buttons = new ArrayList<JButton>();
 		
-		for(Color i : colors)
+		for(CarColor i : colors)
 		{
-			JPanel panel = new JPanel();
-			panel.setLayout(new GridLayout(3, 3));
+			JPanel panel = new JPanel();			
+			JButton button = new JButton(i.getColorName());
 			
-			JButton button = new JButton();
+			panel.setBackground(i.getColor());
 			
-			panel.setBackground(i);
 			addColorListeners(i, button);
 			buttons.add(button);
 			add(panel);
@@ -56,7 +54,7 @@ public class ColorPalette extends JFrame{
 		setVisible(true);
 	}
 	
-	private void addColorListeners(Color color, JButton button)
+	private void addColorListeners(CarColor color, JButton button)
 	{
 		button.addActionListener((ActionEvent event) -> 
 										{
@@ -64,7 +62,7 @@ public class ColorPalette extends JFrame{
 										});
 	}
 	
-	private void colorResponse(Color color)
+	private void colorResponse(CarColor color)
 	{
 		if(displayFrame == null || !displayFrame.isVisible())
 		{
@@ -80,15 +78,26 @@ public class ColorPalette extends JFrame{
 			displayFrame.add(displayPanel);
 			
 			displayFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			displayPanel.setBackground(color);
+			addImage(color);
 			displayFrame.setVisible(true);
 		}
 		else
 		{
-			displayPanel.setBackground(color);
+			addImage(color);
+			displayPanel.revalidate();
 			displayPanel.repaint();
+			displayFrame.revalidate();
 			displayFrame.repaint();
 		}
+	}
+	
+	
+	private void addImage(CarColor color)
+	{
+		JLabel label = new JLabel(color.getImage());
+		displayPanel.removeAll();
+		
+		displayPanel.add(label);
 	}
 	
 	
@@ -104,22 +113,22 @@ public class ColorPalette extends JFrame{
 
 	public static void main(String[] args) 
 	{
-		ArrayList <Color> c1 = new ArrayList<Color>();
+		ArrayList <CarColor> c1 = new ArrayList<CarColor>();
 		
-		c1.add(Color.black);
-		c1.add(Color.blue);
-		c1.add(Color.DARK_GRAY);
-		c1.add(Color.GREEN);
-		c1.add(Color.WHITE);
-		c1.add(Color.pink);
+		c1.add(new CarColor("blueTaco.jpg", "Blue", Color.blue));
+		c1.add(new CarColor("blackTaco.jpg", "Black", Color.black));
+		c1.add(new CarColor("greenTaco.jpg", "Army Green", new Color(114, 135, 0)));
+		c1.add(new CarColor("whiteTaco.jpg", "White", Color.WHITE));
+		c1.add(new CarColor("greyTaco.jpg", "Dark Grey", Color.DARK_GRAY));
 		
 		new ColorPalette(c1, "Exterior Color Options");
 		
-		ArrayList <Color> c2 = new ArrayList <Color>();
+		ArrayList <CarColor> c2 = new ArrayList <CarColor>();
 		
-		c2.add(Color.yellow);
-		c2.add(Color.magenta);
-		c2.add(Color.CYAN);
+		
+		c2.add(new CarColor("greenInt.jpg", "Army Green", new Color(114, 135, 0)));
+		c2.add(new CarColor("brownInt.jpg", "Brown", new Color(210, 105, 30)));
+		c2.add(new CarColor("blackInt.jpg", "Black", Color.black));
 		
 		new ColorPalette(c2, "Interior Color Options");
 	}
